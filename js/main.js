@@ -1,21 +1,17 @@
-var canvas = {
+let canvas = {
     element: document.getElementById('canvas'),
     width: window.innerWidth, //600,
     height: window.innerHeight,//400,
     initialize: function () {
         this.element.style.width = this.width + 'px';
         this.element.style.height = this.height + 'px';
-        
         document.body.appendChild(this.element);
     }
 };
 
-var Ball = {
-    create: function (radius) {
-        var newBall = Object.create(this);
-        // Ball directions
-        newBall.dx = this.randomDirection();
-        newBall.dy = this.randomDirection();
+var ball = {
+    create: function (radius = 50) {
+        let newBall = Object.create(this);
         // Create ball
         newBall.element = document.createElement('div');
         newBall.element.style.backgroundColor = this.colors[Math.floor(Math.random()*this.colors.length)],
@@ -24,16 +20,21 @@ var Ball = {
         newBall.element.className += ' ball';
         newBall.width = parseInt(newBall.element.style.width);
         newBall.height = parseInt(newBall.element.style.height);
+        // Ball directions
+        newBall.dx = this.randomDirection();
+        newBall.dy = this.randomDirection();
         // Random ball location
         newBall.lx = Math.floor(Math.random() * (canvas.width - radius * 2) + 1);
         newBall.ly = Math.floor(Math.random() * (canvas.height - radius * 2) + 1);
+        // Add ball to canvas
         canvas.element.appendChild(newBall.element);
+        
         return newBall;
     },
 
     colors: ['#d578ff', '#625df0', '#59e7f2', '#f259a6', '#67eebb', '#213240', '#90aec6', '#10c8cd', '#ec1559', '#faf93c'],
 
-    directions: [-6, -4, -3, -2, -1, 1, 2, 3, 4, 6],
+    directions: [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6],
 
     randomDirection: function() {
         return this.directions[Math.floor(Math.random()*this.directions.length)]
@@ -45,11 +46,12 @@ var Ball = {
     },
 
     hitWall: function (x, y) {
-        if (x < 0 || x >= canvas.width - this.width) {
+        if (x < 0 || x > canvas.width - this.width) {
             this.dx = -this.dx;
             this.element.style.backgroundColor = this.colors[Math.floor(Math.random()*this.colors.length)];
         }
-        if (y <0 || y >= canvas.height - this.height) {
+
+        if (y <0 || y > canvas.height - this.height) {
             this.dy = -this.dy;
             this.element.style.backgroundColor = this.colors[Math.floor(Math.random()*this.colors.length)];
         }
@@ -57,7 +59,7 @@ var Ball = {
 
     draw: function (x = this.lx, y = this.ly) {
         this.moveTo(x, y);
-        var ball = this;
+        let ball = this;
         setTimeout(function () {
             ball.hitWall(x, y);
             ball.draw(x + ball.dx, y + ball.dy);
@@ -66,50 +68,50 @@ var Ball = {
 
 
     speedUp: function() {
-        if (absolute(this.dx) <= 50 || absolute(this.dy) <= 50) {
-            this.dx = rounded(2 * this.dx); 
-            this.dy = rounded(2 * this.dy); 
+        if (Math.abs(this.dx) <= 50 && Math.abs(this.dy) <= 50) {
+            btnSlowDown.classList -= ' hidden';
+            this.dx = Math.floor(2 * this.dx); 
+            this.dy = Math.floor(2 * this.dy); 
         } else {
             alert('Cannot speedup more!');
+            btnSpeedUp.classList += ' hidden';
         }
     },
 
     slowDown: function() {
-        if (absolute(this.dx) > 2 || absolute(this.dx) > 2) {
-            this.dx = rounded(1/2 * this.dx); 
-            this.dy = rounded(1/2 * this.dy); 
+        if (Math.abs(this.dx) > 2 && Math.abs(this.dx) > 2) {
+            btnSpeedUp.classList -= ' hidden';
+            this.dx = Math.floor(1/2 * this.dx); 
+            this.dy = Math.floor(1/2 * this.dy); 
         } else {
             alert('Cannot slowdown more!');
+            btnSlowDown.classList += ' hidden';
         }
     },
 
     createController: function() {
-        var btnSpeedUp = document.createElement('button')
-        btnSpeedUp.innerHTML = 'Speedup';
-        btnSpeedUp.id += 'speedUp'
-        canvas.element.appendChild(btnSpeedUp);
-
-        var btnSlowDown = document.createElement('button')
-        btnSlowDown.innerHTML = 'Slowdown';
-        btnSlowDown.id += 'slowDown'
+        var btnSlowDown = document.createElement('button');
+        btnSlowDown.innerHTML = '<i class="fa-solid fa-backward"></i>';
+        btnSlowDown.id += 'slowDown';
         canvas.element.appendChild(btnSlowDown);
+
+        var btnReLoad = document.createElement('button');
+        btnReLoad.innerHTML = '<a href="/"><i class="fa-solid fa-arrow-rotate-right"></i></a>';
+        canvas.element.appendChild(btnReLoad);
+
+        var btnSpeedUp = document.createElement('button')
+        btnSpeedUp.innerHTML = '<i class="fa-solid fa-forward"></i>';
+        btnSpeedUp.id += 'speedUp';
+        canvas.element.appendChild(btnSpeedUp);
     }
 };
 
-function rounded(num) {
-    return Math.round(num);
-}
-
-function absolute(num) {
-    return Math.abs(num);
-}
-
 // Start
 canvas.initialize();
-var myBall = Ball.create(100);
+let myBall = ball.create();
 myBall.createController();
-var btnSpeedUp = document.getElementById('speedUp');
-var btnSlowDown = document.getElementById('slowDown');
+let btnSpeedUp = document.getElementById('speedUp');
+let btnSlowDown = document.getElementById('slowDown');
 myBall.draw();
 btnSpeedUp.addEventListener('click', function() {myBall.speedUp()});
 btnSlowDown.addEventListener('click', function() {myBall.slowDown()});
