@@ -13,27 +13,27 @@ var canvas = {
 var Ball = {
     create: function (radius) {
         var newBall = Object.create(this);
+        // Ball directions
         newBall.dx = this.randomDirection();
         newBall.dy = this.randomDirection();
-        newBall.radius = radius
-        newBall.width = radius*2;
-        newBall.height = radius*2;
+        // Create ball
         newBall.element = document.createElement('div');
         newBall.element.style.backgroundColor = this.colors[Math.floor(Math.random()*this.colors.length)],
-        newBall.element.style.width = radius + 'px';
-        newBall.element.style.height = radius + 'px';
+        newBall.element.style.width = radius * 2 + 'px';
+        newBall.element.style.height = radius * 2 + 'px';
         newBall.element.className += ' ball';
         newBall.width = parseInt(newBall.element.style.width);
         newBall.height = parseInt(newBall.element.style.height);
-        newBall.lx = radius + (Math.random() * (canvas.width - radius) + 3);
-        newBall.ly = radius + (Math.random() * (canvas.height - radius) + 3);
+        // Random ball location
+        newBall.lx = Math.floor(Math.random() * (canvas.width - radius * 2) + 1);
+        newBall.ly = Math.floor(Math.random() * (canvas.height - radius * 2) + 1);
         canvas.element.appendChild(newBall.element);
         return newBall;
     },
 
     colors: ['#d578ff', '#625df0', '#59e7f2', '#f259a6', '#67eebb', '#213240', '#90aec6', '#10c8cd', '#ec1559', '#faf93c'],
 
-    directions: [-6,-5,-4,-3,-2,-1,1,2,3,4,5,6],
+    directions: [-6, -4, -3, -2, -1, 1, 2, 3, 4, 6],
 
     randomDirection: function() {
         return this.directions[Math.floor(Math.random()*this.directions.length)]
@@ -47,9 +47,11 @@ var Ball = {
     hitWall: function (x, y) {
         if (x < 0 || x >= canvas.width - this.width) {
             this.dx = -this.dx;
+            this.element.style.backgroundColor = this.colors[Math.floor(Math.random()*this.colors.length)];
         }
         if (y <0 || y >= canvas.height - this.height) {
             this.dy = -this.dy;
+            this.element.style.backgroundColor = this.colors[Math.floor(Math.random()*this.colors.length)];
         }
     },
 
@@ -108,6 +110,6 @@ var myBall = Ball.create(100);
 myBall.createController();
 var btnSpeedUp = document.getElementById('speedUp');
 var btnSlowDown = document.getElementById('slowDown');
-myBall.draw(100, 100);
+myBall.draw();
 btnSpeedUp.addEventListener('click', function() {myBall.speedUp()});
 btnSlowDown.addEventListener('click', function() {myBall.slowDown()});
