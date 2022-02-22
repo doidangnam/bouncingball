@@ -1,0 +1,18 @@
+body {
+    text-align: center;
+    margin:0px;
+}
+#canvas {
+    position: relative;
+    background-color: lightsteelblue;
+    top:0;
+    left:0;
+    right:0;
+    left:0;
+}
+.ball {
+    background-color: black;
+    position: absolute;
+    display: inline-block;
+    border-radius: 50%;
+}
