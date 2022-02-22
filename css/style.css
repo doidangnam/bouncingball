@@ -2,17 +2,31 @@ body {
     text-align: center;
     margin:0px;
 }
+
+a {
+    text-decoration: none;
+}
+
 #canvas {
     position: relative;
-    background-color: lightsteelblue;
     top:0;
     left:0;
     right:0;
     left:0;
 }
+
+img {
+    width: 40px;
+}
+
 .ball {
     background-color: black;
     position: absolute;
     display: inline-block;
     border-radius: 50%;
+    border: 1px solid black;
+}
+
+.hidden {
+    visibility: hidden;
 }
